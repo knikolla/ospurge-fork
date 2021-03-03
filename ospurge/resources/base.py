@@ -126,11 +126,8 @@ class ServiceResource(six.with_metaclass(CodingStyleMixin,
         if project_id:
             return project_id == self.cleanup_project_id
         else:
-            # Uncomment the following line once the SDK and all OpenStack
-            # services returns the resource owner. In the mean time no need
-            # to be worrying.
-            # logging.warning("Can't determine owner of resource %s", resource)
-            return True
+            logging.warning("Can't determine owner of resource %s", resource)
+            return False
 
     @abc.abstractmethod
     def delete(self, resource):
