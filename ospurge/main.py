@@ -29,8 +29,9 @@ if typing.TYPE_CHECKING:  # pragma: no cover
     from typing import Optional  # noqa: F401
 
 
-def configure_logging(verbose):
+def configure_logging(verbose=False, debug=False):
     log_level = logging.INFO if verbose else logging.WARNING
+    log_level = logging.DEBUG if debug else log_level
     logging.basicConfig(
         format='%(levelname)s:%(name)s:%(asctime)s:%(message)s',
         level=log_level
@@ -46,6 +47,10 @@ def create_argument_parser():
     parser.add_argument(
         "--verbose", action="store_true",
         help="Make output verbose"
+    )
+    parser.add_argument(
+        "--debug", action="store_true",
+        help="Set logging level to DEBUG"
     )
     parser.add_argument(
         "--dry-run", action="store_true",
@@ -232,7 +237,7 @@ def main():
     cloud_config.register_argparse_arguments(parser, sys.argv)
 
     options = parser.parse_args()
-    configure_logging(options.verbose)
+    configure_logging(verbose=options.verbose, debug=options.debug)
 
     creds_manager = CredentialsManager(options=options, config=cloud_config)
     creds_manager.ensure_enabled_project()
